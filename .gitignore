@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+
+.env
+.env.*
+!.env.example
+
+# Vendored Langfuse self-hosting repo — its own project, own git history,
+# not something we track here.
+langfuse-server/
