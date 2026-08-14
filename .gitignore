@@ -6,6 +6,10 @@ __pycache__/
 .env.*
 !.env.example
 
+# Runtime state, not source
+data/stateful-memory/*.db
+*.png
+
 # Vendored Langfuse self-hosting repo — its own project, own git history,
 # not something we track here.
 langfuse-server/

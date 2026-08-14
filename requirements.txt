@@ -1,4 +1,6 @@
 langchain
 langchain-openai
-langfuse
+langgraph
+langgraph-checkpoint-sqlite
+langfuse==4.14.4
 python-dotenv
