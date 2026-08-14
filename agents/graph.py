@@ -3,14 +3,9 @@ import sqlite3
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-# Must run before importing langfuse — get_client()/CallbackHandler() read
-# credentials from os.environ when constructed, not lazily.
-from dotenv import load_dotenv
-load_dotenv()
-
 from tools.dispute_tools import get_transaction, get_customer, get_customer_transactions
 from langchain.chat_models import init_chat_model
-from langchain_core.messages import AnyMessage, SystemMessage, ToolMessage
+from langchain_core.messages import AIMessage, AnyMessage, SystemMessage, ToolMessage
 from typing import Literal
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -18,6 +13,9 @@ from typing_extensions import TypedDict, Annotated
 import operator
 from langfuse import get_client
 from langfuse.langchain import CallbackHandler
+
+from dotenv import load_dotenv
+load_dotenv()
 
 # Initialize Langfuse client
 langfuse = get_client()
@@ -31,7 +29,7 @@ class MessagesState(TypedDict):
     llm_calls: int
 
 
-# Model must be defined before it is used
+# Model definition
 model = init_chat_model(
     "gpt-4o-mini",
     temperature=0
@@ -42,7 +40,7 @@ tools_by_name = {tool.name: tool for tool in tools}
 model_with_tools = model.bind_tools(tools)
 
 
-def llm_call(state: dict):
+def llm_call(state: MessagesState):
     """LLM decides whether to call a tool or not"""
 
     return {
@@ -60,11 +58,14 @@ def llm_call(state: dict):
         "llm_calls": state.get('llm_calls', 0) + 1
     }
 
-def tool_node(state: dict):
+def tool_node(state: MessagesState):
     """Performs the tool call"""
 
     result = []
-    for tool_call in state["messages"][-1].tool_calls:
+    
+    last_message = state["messages"][-1]
+    assert isinstance(last_message, AIMessage), "tool_node expects the last message to be an AIMessage"
+    for tool_call in last_message.tool_calls:
         tool = tools_by_name[tool_call["name"]]
         observation = tool.invoke(tool_call["args"], config={"callbacks": [langfuse_handler]})
         result.append(ToolMessage(content=str(observation), tool_call_id=tool_call["id"]))
@@ -76,11 +77,11 @@ def should_continue(state: MessagesState) -> Literal["tool_node", "__end__"]:
     last_message = messages[-1]
 
     # If the LLM makes a tool call, then perform an action
-    if last_message.tool_calls:
+    if isinstance(last_message, AIMessage) and last_message.tool_calls:
         return "tool_node"
 
     # Otherwise, we stop (reply to the user)
-    return END
+    return "__end__"
 
 # Build workflow
 agent_builder = StateGraph(MessagesState)

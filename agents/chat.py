@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langchain_core.messages import HumanMessage
-from agents.graph import agent
+from agents.graph import agent, MessagesState
 from langfuse import get_client, propagate_attributes
 
 langfuse = get_client()
@@ -57,7 +57,7 @@ def main():
                     # history here too would double it up with what the
                     # checkpointer already restores.
                     result = agent.invoke(
-                        {"messages": [HumanMessage(content=user_input)]},
+                        MessagesState(messages=[HumanMessage(content=user_input)], llm_calls=0),
                         config={"configurable": {"thread_id": session_id}}
                     )
                     last = result["messages"][-1]
