@@ -151,7 +151,7 @@ rounded_box(ax, CLI_BX, CLI_BY, CLI_BW, CLI_BH,
 label(ax, CLI_BX+CLI_BW/2, CLI_BY+CLI_BH/2+0.1,
       "CLI  chat.py", size=9, weight="bold")
 mono(ax,  CLI_BX+CLI_BW/2, CLI_BY+CLI_BH/2-0.18,
-      "agents/chat.py  ·  assigns thread_id per run", size=7.5)
+      "agents/chat.py  ·  one thread_id per CLI session, reused across all turns", size=7.5)
 
 # Orchestrate box
 ORC_BX, ORC_BY, ORC_BW, ORC_BH = 10.5, 9.65, 2.7, 0.8
@@ -257,18 +257,30 @@ ax.text(LLM_X+LLM_W+1.05, (LLM_Y+LLM_H/2 + TOOL_Y+TOOL_H/2)/2,
         "loop back", fontsize=7.5, color=C_ACCENT,
         ha="left", va="center", style="italic", zorder=5)
 
-# Callers ──► START  (arrow from caller band into graph)
+# IBM Orchestrate ──► FastAPI box  (HTTP, stays inside caller band)
+ax.annotate(
+    "", xy=(API_BX+API_BW, ORC_BY+ORC_BH/2),
+    xytext=(ORC_BX, ORC_BY+ORC_BH/2),
+    arrowprops=dict(arrowstyle="-|>", color=C_CALLER_EDGE, lw=1.4,
+                    connectionstyle="arc3,rad=0"),
+    zorder=4
+)
+ax.text((API_BX+API_BW + ORC_BX)/2, ORC_BY+ORC_BH/2+0.18,
+        "HTTP POST", fontsize=7.5, color=C_CALLER_EDGE,
+        ha="center", va="bottom", style="italic", zorder=5)
+
+# FastAPI ──► START
 arrow(ax,
-      (API_BX+API_BW/2 + CLI_BX+CLI_BW/2)/2, CALLER_Y,
-      START_X, START_Y+0.28,
+      API_BX+API_BW/2, CALLER_Y,
+      START_X-0.3, START_Y+0.28,
       color=C_CALLER_EDGE, lw=1.6,
       label_text=" HumanMessage + thread_id",
       label_color=C_CALLER_EDGE)
 
-# Orchestrate separate arrow
+# CLI ──► START
 arrow(ax,
-      ORC_BX+ORC_BW/2, CALLER_Y,
-      START_X+0.4, START_Y+0.28,
+      CLI_BX+CLI_BW/2, CALLER_Y,
+      START_X+0.3, START_Y+0.28,
       color=C_CALLER_EDGE, lw=1.6)
 
 
