@@ -13,3 +13,4 @@ data/stateful-memory/*.db
 # Vendored Langfuse self-hosting repo — its own project, own git history,
 # not something we track here.
 langfuse-server/
+data/stateful-memory/

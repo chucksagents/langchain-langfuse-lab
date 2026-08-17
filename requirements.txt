@@ -4,3 +4,5 @@ langgraph
 langgraph-checkpoint-sqlite
 langfuse==4.14.4
 python-dotenv
+fastapi
+uvicorn
