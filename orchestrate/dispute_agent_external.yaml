@@ -1,0 +1,17 @@
+spec_version: v1
+kind: external
+name: dispute_agent_external
+title: Dispute Resolution Agent (External)
+provider: external_chat
+api_url: "http://192.168.1.155:8008/v1/chat/completions"
+auth_scheme: NONE
+auth_config: {}
+chat_params:
+  stream: false
+config:
+  hidden: false
+  enable_cot: false
+description: >
+  Locally-running LangGraph dispute-resolution assistant. Looks up customers
+  and transactions and helps with card disputes. Runs outside Orchestrate's
+  sandbox so it can reach a self-hosted Langfuse instance for tracing.
