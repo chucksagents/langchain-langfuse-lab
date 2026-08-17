@@ -323,7 +323,7 @@ label(ax, PERS_X+PERS_W/2, PERS_Y+0.5,
       "SqliteSaver  ←─  thread_id  ─→  data/stateful-memory/checkpoints.db",
       size=9, weight="bold", color="#831843")
 mono(ax,  PERS_X+PERS_W/2, PERS_Y+0.22,
-      "Multi-turn memory  ·  state reloaded per call  ·  shared across CLI & API server",
+      "Multi-turn memory  ·  state reloaded per call",
       size=7.8, color="#9d174d")
 
 # __end__ ──► persistence
