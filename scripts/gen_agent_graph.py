@@ -144,15 +144,6 @@ label(ax, API_BX+API_BW/2, API_BY+API_BH/2+0.1,
 mono(ax,  API_BX+API_BW/2, API_BY+API_BH/2-0.18,
       "agents/api.py  ·  stream or JSON response", size=7.5)
 
-# CLI box
-CLI_BX, CLI_BY, CLI_BW, CLI_BH = 6.5, 9.65, 3.5, 0.8
-rounded_box(ax, CLI_BX, CLI_BY, CLI_BW, CLI_BH,
-            fc="#ede9fe", ec=C_CALLER_EDGE, lw=1.2, radius=0.2)
-label(ax, CLI_BX+CLI_BW/2, CLI_BY+CLI_BH/2+0.1,
-      "CLI  chat.py", size=9, weight="bold")
-mono(ax,  CLI_BX+CLI_BW/2, CLI_BY+CLI_BH/2-0.18,
-      "agents/chat.py  ·  one thread_id per CLI session, reused across all turns", size=7.5)
-
 # Orchestrate box
 ORC_BX, ORC_BY, ORC_BW, ORC_BH = 10.5, 9.65, 2.7, 0.8
 rounded_box(ax, ORC_BX, ORC_BY, ORC_BW, ORC_BH,
@@ -272,16 +263,10 @@ ax.text((API_BX+API_BW + ORC_BX)/2, ORC_BY+ORC_BH/2+0.18,
 # FastAPI ──► START
 arrow(ax,
       API_BX+API_BW/2, CALLER_Y,
-      START_X-0.3, START_Y+0.28,
+      START_X, START_Y+0.28,
       color=C_CALLER_EDGE, lw=1.6,
       label_text=" HumanMessage + thread_id",
       label_color=C_CALLER_EDGE)
-
-# CLI ──► START
-arrow(ax,
-      CLI_BX+CLI_BW/2, CALLER_Y,
-      START_X+0.3, START_Y+0.28,
-      color=C_CALLER_EDGE, lw=1.6)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
